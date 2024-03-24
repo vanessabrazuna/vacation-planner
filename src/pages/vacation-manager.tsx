@@ -1,5 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -14,13 +16,21 @@ export function VacationManager() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<vacationManagerData>()
+    formState: { isSubmitting, errors },
+  } = useForm<vacationManagerData>({
+    resolver: zodResolver(vacationManagerSchema),
+  })
 
-  async function handleVacationManager(data: vacationManagerData) {
-    console.log(data)
+  async function handleVacationPlans(data: vacationManagerData) {
+    try {
+      console.log(data)
 
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      toast.success('Cadastro enviado com sucesso!')
+    } catch {
+      toast.error('Ocorreu um erro ao enviar o cadastro.')
+    }
   }
 
   return (
@@ -38,12 +48,16 @@ export function VacationManager() {
           </div>
 
           <form
-            onSubmit={handleSubmit(handleVacationManager)}
+            onSubmit={handleSubmit(handleVacationPlans)}
             className="space-y-4"
           >
             <div className="space-y-2">
               <Label htmlFor="title">Título</Label>
               <Input id="title" type="text" {...register('title')} />
+
+              {errors.title && (
+                <p className="text-red-500">{errors.title.message}</p>
+              )}
 
               <Label htmlFor="description">Descrição</Label>
               <Textarea
@@ -51,6 +65,10 @@ export function VacationManager() {
                 className="resize-none"
                 {...register('description')}
               />
+
+              {errors.description && (
+                <p className="text-red-500">{errors.description.message}</p>
+              )}
 
               <div className="flex items-center justify-around">
                 <div>
@@ -60,16 +78,28 @@ export function VacationManager() {
                     type="date"
                     {...register('startDate')}
                   />
+
+                  {errors.startDate && (
+                    <p className="text-red-500">{errors.startDate.message}</p>
+                  )}
                 </div>
 
                 <div>
                   <Label htmlFor="endDate">Data final</Label>
                   <Input id="endDate" type="date" {...register('endDate')} />
                 </div>
+
+                {errors.endDate && (
+                  <p className="text-red-500">{errors.endDate.message}</p>
+                )}
               </div>
 
               <Label htmlFor="location">Local</Label>
               <Input id="location" type="text" {...register('location')} />
+
+              {errors.location && (
+                <p className="text-red-500">{errors.location.message}</p>
+              )}
 
               <Label htmlFor="participants">Participantes</Label>
               <Input
@@ -77,6 +107,10 @@ export function VacationManager() {
                 type="number"
                 {...register('participants')}
               />
+
+              {errors.participants && (
+                <p className="text-red-500">{errors.participants.message}</p>
+              )}
             </div>
 
             <Button
