@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -42,9 +43,13 @@ export function VacationPlanRegistration() {
     <>
       <Helmet title="Home" />
       <div className="p-8 shadow-lg">
-        <Button variant="link" asChild className="absolute right-3 top-2">
-          <Link to="vacation-plan">Visualizar/Editar plano</Link>
+        <Button variant="link" asChild className="absolute right-12 top-2">
+          <Link to="all-vacation-plan">Visualizar planos</Link>
         </Button>
+
+        <div className="absolute right-3 top-2">
+          <ThemeToggle />
+        </div>
 
         <div className="flex w-[350px] flex-col justify-center gap-6">
           <div className="flex flex-col gap-2 text-center">
