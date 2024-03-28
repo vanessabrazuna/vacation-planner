@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -8,20 +9,24 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { vacationManagerSchema } from '@/utils/validation'
+import { vacationPlanRegistrationSchema } from '@/utils/validation'
 
-type vacationManagerData = z.infer<typeof vacationManagerSchema>
+type VacationPlanRegistrationData = z.infer<
+  typeof vacationPlanRegistrationSchema
+>
 
-export function VacationManager() {
+export function VacationPlanRegistration() {
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
-  } = useForm<vacationManagerData>({
-    resolver: zodResolver(vacationManagerSchema),
+  } = useForm<VacationPlanRegistrationData>({
+    resolver: zodResolver(vacationPlanRegistrationSchema),
   })
 
-  async function handleVacationPlans(data: vacationManagerData) {
+  async function handleVacationPlanRegistration(
+    data: VacationPlanRegistrationData,
+  ) {
     try {
       console.log(data)
 
@@ -37,21 +42,25 @@ export function VacationManager() {
     <>
       <Helmet title="Home" />
       <div className="p-8 shadow-lg">
+        <Button variant="link" asChild className="absolute right-3 top-2">
+          <Link to="vacation-plan">Visualizar/Editar plano</Link>
+        </Button>
+
         <div className="flex w-[350px] flex-col justify-center gap-6">
           <div className="flex flex-col gap-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
               Cadastre seu plano de férias
             </h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               Aqui você pode cadastrar seu plano de férias.
             </p>
           </div>
 
           <form
-            onSubmit={handleSubmit(handleVacationPlans)}
+            onSubmit={handleSubmit(handleVacationPlanRegistration)}
             className="space-y-4"
           >
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="title">Título</Label>
               <Input id="title" type="text" {...register('title')} />
 
@@ -70,8 +79,8 @@ export function VacationManager() {
                 <p className="text-red-500">{errors.description.message}</p>
               )}
 
-              <div className="flex items-center justify-around">
-                <div>
+              <div className="flex items-center gap-6">
+                <div className="w-full">
                   <Label htmlFor="startDate">Data inicial</Label>
                   <Input
                     id="startDate"
@@ -84,14 +93,14 @@ export function VacationManager() {
                   )}
                 </div>
 
-                <div>
+                <div className="w-full">
                   <Label htmlFor="endDate">Data final</Label>
                   <Input id="endDate" type="date" {...register('endDate')} />
-                </div>
 
-                {errors.endDate && (
-                  <p className="text-red-500">{errors.endDate.message}</p>
-                )}
+                  {errors.endDate && (
+                    <p className="text-red-500">{errors.endDate.message}</p>
+                  )}
+                </div>
               </div>
 
               <Label htmlFor="location">Local</Label>

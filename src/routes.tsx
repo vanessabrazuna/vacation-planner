@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import { VacationLayout } from '@/pages/layout/vacation-layout'
-import { Vacation } from '@/pages/vacation'
-import { VacationManager } from '@/pages/vacation-manager'
+import { VacationPlan } from '@/pages/vacation-plan'
+import { VacationPlanRegistration } from '@/pages/vacation-plan-registration'
 
 export const router = createBrowserRouter([
   {
@@ -11,11 +11,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <VacationManager />,
+        element: <VacationPlanRegistration />,
       },
       {
-        path: '/vacation',
-        element: <Vacation />,
+        path: '/vacation-plan',
+        element: <VacationPlan />,
       },
     ],
   },
