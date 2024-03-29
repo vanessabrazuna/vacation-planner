@@ -1,7 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { AllVacationPlans } from '@/pages/ all-vacation-plans'
-import { VacationLayout } from '@/pages/layout/vacation-layout'
+import { PlanLayout } from '@/pages/layouts/plan-layout'
+import { VacationLayout } from '@/pages/layouts/vacation-layout'
+import { Plans } from '@/pages/plans/ plans'
 import { VacationPlan } from '@/pages/vacation-plan'
 import { VacationPlanRegistration } from '@/pages/vacation-plan-registration'
 
@@ -15,12 +16,18 @@ export const router = createBrowserRouter([
         element: <VacationPlanRegistration />,
       },
       {
-        path: '/all-vacation-plan',
-        element: <AllVacationPlans />,
-      },
-      {
         path: '/vacation-plan', // dialog component
         element: <VacationPlan />,
+      },
+    ],
+  },
+  {
+    path: '/',
+    element: <PlanLayout />,
+    children: [
+      {
+        path: '/plans',
+        element: <Plans />,
       },
     ],
   },

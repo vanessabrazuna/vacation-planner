@@ -20,6 +20,7 @@ export function VacationPlanRegistration() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm<VacationPlanRegistrationData>({
     resolver: zodResolver(vacationPlanRegistrationSchema),
@@ -37,17 +38,23 @@ export function VacationPlanRegistration() {
     } catch {
       toast.error('Ocorreu um erro ao enviar o cadastro.')
     }
+
+    reset()
   }
 
   return (
     <>
       <Helmet title="Home" />
-      <div className="p-8 shadow-lg">
-        <Button variant="link" asChild className="absolute right-12 top-2">
-          <Link to="all-vacation-plan">Visualizar planos</Link>
+      <div className="p-8">
+        <Button
+          variant="link"
+          asChild
+          className="absolute right-16 top-0 md:top-8"
+        >
+          <Link to="plans">Visualizar planos</Link>
         </Button>
 
-        <div className="absolute right-3 top-2">
+        <div className="absolute right-6 top-0.5 md:top-8">
           <ThemeToggle />
         </div>
 
