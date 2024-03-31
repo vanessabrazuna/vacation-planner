@@ -8,7 +8,7 @@ import { router } from './routes'
 export function App() {
   return (
     <HelmetProvider>
-      <ThemeProvider storageKey="vacation-theme" defaultTheme="system">
+      <ThemeProvider storageKey="vacation-theme" defaultTheme="light">
         <Helmet titleTemplate="%s | vacation.planner" />
         <Toaster richColors position="top-right" />
         <RouterProvider router={router} />
