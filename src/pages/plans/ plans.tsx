@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 
+import { Pagination } from '@/components/pagination'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,33 +33,36 @@ export function Plans() {
         </div>
 
         <h1 className="text-3xl font-bold tracking-tight">Planos</h1>
-      </div>
-      <div className="space-y-2.5">
-        <PlanTableFilters />
 
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[4px]"></TableHead>
-                <TableHead className="w-[2px]">Id</TableHead>
-                <TableHead className="w-[430px]">Título</TableHead>
-                <TableHead className="w-[570px]">Descrição</TableHead>
-                <TableHead className="w-[40px]">Data inicial</TableHead>
-                <TableHead className="w-[40px]">Data final</TableHead>
-                <TableHead className="w-[14px]">Localização</TableHead>
-                <TableHead className="w-[4px]">Participantes</TableHead>
-                <TableHead className="w-[160px]">Status</TableHead>
-                <TableHead className="w-[14px]"></TableHead>
-                <TableHead className="w-[14px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Array.from({ length: 7 }).map((_, i) => {
-                return <PlanTableRow key={i} />
-              })}
-            </TableBody>
-          </Table>
+        <div className="space-y-2.5">
+          <PlanTableFilters />
+
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[4px]"></TableHead>
+                  <TableHead className="w-[2px]">Id</TableHead>
+                  <TableHead className="w-[430px]">Título</TableHead>
+                  <TableHead className="w-[570px]">Descrição</TableHead>
+                  <TableHead className="w-[40px]">Data inicial</TableHead>
+                  <TableHead className="w-[40px]">Data final</TableHead>
+                  <TableHead className="w-[14px]">Localização</TableHead>
+                  <TableHead className="w-[4px]">Participantes</TableHead>
+                  <TableHead className="w-[160px]">Status</TableHead>
+                  <TableHead className="w-[14px]"></TableHead>
+                  <TableHead className="w-[14px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from({ length: 7 }).map((_, i) => {
+                  return <PlanTableRow key={i} />
+                })}
+              </TableBody>
+            </Table>
+          </div>
+
+          <Pagination pageIndex={0} totalCount={52} perPage={7} />
         </div>
       </div>
     </>
