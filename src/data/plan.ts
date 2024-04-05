@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-export const plan = Array.from({ length: 150 }).map(() => {
+export const plan = Array.from({ length: 7 }).map(() => {
   return {
     id: faker.number.int({ min: 1000, max: 2000 }),
     title: faker.lorem.words(1),

@@ -7,6 +7,16 @@ import {
 } from '@/components/ui/dialog'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
+// interface PlanDetaislProps {
+//   id: number
+//   title: string
+//   description: string
+//   initialDate: Date
+//   finalDate: Date
+//   location: string
+//   participants: number
+// }
+
 export function PlanDetails() {
   return (
     <DialogContent>
