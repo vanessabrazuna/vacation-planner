@@ -1,3 +1,6 @@
+import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
+import { format } from 'date-fns'
+import { Plane, Search, X } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 
@@ -7,13 +10,15 @@ import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { plan } from '@/data/plan'
 
+import { PlanDetails } from './plan-details'
 import { PlanTableFilters } from './plan-table-filters'
-import { PlanTableRow } from './plan-table-row'
 
 export function Plans() {
   return (
@@ -43,20 +48,76 @@ export function Plans() {
                 <TableRow>
                   <TableHead className="w-[4px]"></TableHead>
                   <TableHead className="w-[2px]">Id</TableHead>
-                  <TableHead className="w-[430px]">Título</TableHead>
-                  <TableHead className="w-[570px]">Descrição</TableHead>
-                  <TableHead className="w-[40px]">Data inicial</TableHead>
-                  <TableHead className="w-[40px]">Data final</TableHead>
+                  <TableHead className="w-[16px]">Título</TableHead>
+                  <TableHead className="w-[50px]">Descrição</TableHead>
+                  <TableHead className="w-[30px]">Data inicial</TableHead>
+                  <TableHead className="w-[30px]">Data final</TableHead>
                   <TableHead className="w-[14px]">Localização</TableHead>
                   <TableHead className="w-[4px]">Participantes</TableHead>
-                  <TableHead className="w-[160px]">Status</TableHead>
+                  <TableHead className="w-[110px]">Status</TableHead>
                   <TableHead className="w-[14px]"></TableHead>
                   <TableHead className="w-[14px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Array.from({ length: 7 }).map((_, i) => {
-                  return <PlanTableRow key={i} />
+                {plan.map((plan) => {
+                  return (
+                    <TableRow key={plan.id}>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="xs">
+                              <Search className="h-3 w-3" />
+                              <span className="sr-only">Detalhes do plano</span>
+                            </Button>
+                          </DialogTrigger>
+
+                          <PlanDetails />
+                        </Dialog>
+                      </TableCell>
+                      <TableCell className="font-mono text-xs font-medium">
+                        {plan.id}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.title}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.description}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {format(plan.initialDate, 'dd/MM/yyyy')}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {format(plan.finalDate, 'dd/MM/yyyy')}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.location}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.participants}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-amber-400" />
+                          <span className="font-medium text-muted-foreground">
+                            Pendente
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="outline" size="xs">
+                          <Plane className="mr-2 h-3 w-3" />
+                          Aprovar
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="xs">
+                          <X className="mr-2 h-3 w-3" />
+                          Excluir
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
                 })}
               </TableBody>
             </Table>
