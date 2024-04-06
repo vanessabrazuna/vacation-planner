@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const vacationPlanRegistrationSchema = z.object({
+export const validationPlanSchema = z.object({
   title: z.string().min(3, { message: 'Título é obrigatório' }),
   description: z.string().min(6, { message: 'Descrição é obrigatória' }),
   startDate: z

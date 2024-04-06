@@ -1,3 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
 import { Button } from '@/components/ui/button'
 import {
   DialogContent,
@@ -5,19 +10,36 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { validationPlanSchema } from '@/utils/validation'
 
-// interface PlanDetaislProps {
-//   id: number
-//   title: string
-//   description: string
-//   initialDate: Date
-//   finalDate: Date
-//   location: string
-//   participants: number
-// }
+type ValidationPlanData = z.infer<typeof validationPlanSchema>
 
 export function PlanDetails() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting, errors },
+  } = useForm<ValidationPlanData>({
+    resolver: zodResolver(validationPlanSchema),
+  })
+
+  async function handlePlanDetails(data: ValidationPlanData) {
+    try {
+      console.log(data)
+
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      toast.success('Cadastro enviado com sucesso!')
+    } catch {
+      toast.error('Ocorreu um erro ao enviar o cadastro.')
+    }
+
+    reset()
+  }
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -26,62 +48,93 @@ export function PlanDetails() {
       </DialogHeader>
 
       <div className="space-y-6">
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell className="text-muted-foreground">Status</TableCell>
-              <TableCell className="flex justify-end">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-amber-400" />
-                  <span className="font-medium text-muted-foreground">
-                    Pendente
-                  </span>
-                </div>
-              </TableCell>
-            </TableRow>
+        <form onSubmit={handleSubmit(handlePlanDetails)} className="space-y-4">
+          <div className="space-y-4">
+            <Input
+              id="title"
+              type="text"
+              placeholder="Título"
+              {...register('title')}
+            />
 
-            <TableRow>
-              <TableCell className="text-muted-foreground">Título</TableCell>
-              <TableCell className="flex justify-end">Lorem ipsum</TableCell>
-            </TableRow>
+            {errors.title && (
+              <p className="text-red-500">{errors.title.message}</p>
+            )}
 
-            <TableRow>
-              <TableCell className="text-muted-foreground">Descrição</TableCell>
-              <TableCell className="flex justify-end">
-                Lorem ipsum elit.
-              </TableCell>
-            </TableRow>
+            <Textarea
+              id="description"
+              placeholder="Descrição"
+              className="resize-none"
+              {...register('description')}
+            />
 
-            <TableRow>
-              <TableCell className="text-muted-foreground">
-                Data inicial
-              </TableCell>
-              <TableCell className="flex justify-end">10/04/2024</TableCell>
-            </TableRow>
+            {errors.description && (
+              <p className="text-red-500">{errors.description.message}</p>
+            )}
 
-            <TableRow>
-              <TableCell className="text-muted-foreground">
-                Data final
-              </TableCell>
-              <TableCell className="flex justify-end">07/05/2024</TableCell>
-            </TableRow>
+            <div className="flex items-center gap-6">
+              <div className="w-full">
+                <Input
+                  id="startDate"
+                  type="date"
+                  {...register('startDate')}
+                  placeholder="Data inicial"
+                />
 
-            <TableRow>
-              <TableCell className="text-muted-foreground">Local</TableCell>
-              <TableCell className="flex justify-end">Lisboa</TableCell>
-            </TableRow>
+                {errors.startDate && (
+                  <p className="text-red-500">{errors.startDate.message}</p>
+                )}
+              </div>
 
-            <TableRow>
-              <TableCell className="text-muted-foreground">
-                Participantes
-              </TableCell>
-              <TableCell className="flex justify-end">03</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-        <Button className="w-full disabled:hover:cursor-not-allowed">
-          Salvar plano
-        </Button>
+              <div className="w-full">
+                <Input
+                  id="endDate"
+                  type="date"
+                  {...register('endDate')}
+                  placeholder="Data final"
+                />
+
+                {errors.endDate && (
+                  <p className="text-red-500">{errors.endDate.message}</p>
+                )}
+              </div>
+            </div>
+
+            {errors.endDate && (
+              <p className="text-red-500">{errors.endDate.message}</p>
+            )}
+
+            <Input
+              id="location"
+              type="text"
+              placeholder="Local"
+              {...register('location')}
+            />
+
+            {errors.location && (
+              <p className="text-red-500">{errors.location.message}</p>
+            )}
+
+            <Input
+              id="participants"
+              type="number"
+              placeholder="Participantes"
+              {...register('participants')}
+            />
+
+            {errors.participants && (
+              <p className="text-red-500">{errors.participants.message}</p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full disabled:hover:cursor-not-allowed"
+            disabled={isSubmitting}
+          >
+            Salvar plano
+          </Button>
+        </form>
       </div>
     </DialogContent>
   )

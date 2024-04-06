@@ -1,6 +1,7 @@
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
+import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { Plane, Search, X } from 'lucide-react'
+import { Plane, X } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 
@@ -15,23 +16,35 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { plan } from '@/data/plan'
+import { getPlan } from '@/data/plan'
 
+// import { plan } from '@/data/plan'
 import { PlanDetails } from './plan-details'
 import { PlanTableFilters } from './plan-table-filters'
 
 export function Plans() {
+  const { data: plan } = useQuery({
+    queryKey: ['plan'],
+    queryFn: getPlan,
+  })
+
   return (
     <>
       <Helmet title="Planos" />
       <div className="flex flex-col gap-4">
-        <Button
-          variant="link"
-          asChild
-          className="absolute right-16 top-0 md:top-8"
-        >
-          <Link to="/">Cadastrar plano</Link>
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="link"
+              asChild
+              className="absolute right-16 top-0 md:right-20 md:top-8"
+            >
+              <Link to="/">Cadastrar plano</Link>
+            </Button>
+          </DialogTrigger>
+
+          <PlanDetails />
+        </Dialog>
 
         <div className="absolute right-6 top-0.5 md:top-8">
           <ThemeToggle />
@@ -60,65 +73,55 @@ export function Plans() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {plan.map((plan) => {
-                  return (
-                    <TableRow key={plan.id}>
-                      <TableCell>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="outline" size="xs">
-                              <Search className="h-3 w-3" />
-                              <span className="sr-only">Detalhes do plano</span>
-                            </Button>
-                          </DialogTrigger>
-
-                          <PlanDetails />
-                        </Dialog>
-                      </TableCell>
-                      <TableCell className="font-mono text-xs font-medium">
-                        {plan.id}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {plan.title}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {plan.description}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {format(plan.initialDate, 'dd/MM/yyyy')}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {format(plan.finalDate, 'dd/MM/yyyy')}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {plan.location}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {plan.participants}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span className="h-2 w-2 rounded-full bg-amber-400" />
-                          <span className="font-medium text-muted-foreground">
-                            Pendente
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="outline" size="xs">
-                          <Plane className="mr-2 h-3 w-3" />
-                          Aprovar
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="xs">
-                          <X className="mr-2 h-3 w-3" />
-                          Excluir
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
+                {plan &&
+                  plan.map((plan) => {
+                    return (
+                      <TableRow key={plan.id}>
+                        <TableCell></TableCell>
+                        <TableCell className="font-mono text-xs font-medium">
+                          {plan.id}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {plan.title}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {plan.description}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {format(plan.initialDate, 'dd/MM/yyyy')}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {format(plan.finalDate, 'dd/MM/yyyy')}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {plan.location}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {plan.participants}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 rounded-full bg-amber-400" />
+                            <span className="font-medium text-muted-foreground">
+                              Pendente
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Button variant="outline" size="xs">
+                            <Plane className="mr-2 h-3 w-3" />
+                            Aprovar
+                          </Button>
+                        </TableCell>
+                        <TableCell>
+                          <Button variant="ghost" size="xs">
+                            <X className="mr-2 h-3 w-3" />
+                            Excluir
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
               </TableBody>
             </Table>
           </div>
