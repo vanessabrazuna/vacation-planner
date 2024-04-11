@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -12,11 +13,14 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { createPlan } from '@/data/plan'
 import { validationPlanSchema } from '@/utils/validation'
 
 type ValidationPlanData = z.infer<typeof validationPlanSchema>
 
 export function PlanDetails() {
+  const queryClient = useQueryClient()
+
   const {
     register,
     handleSubmit,
@@ -26,9 +30,38 @@ export function PlanDetails() {
     resolver: zodResolver(validationPlanSchema),
   })
 
+  const { mutateAsync: createPlanFn } = useMutation({
+    mutationFn: createPlan,
+    onSuccess(_, variables) {
+      const cached = queryClient.getQueryData(['plan'])
+
+      queryClient.setQueryData(['plan'], (data) => {
+        return [
+          ...data,
+          {
+            id: Math.floor(Math.random() * 9000) + 1000, // id 4 dígitos
+            title: variables.title,
+            description: variables.description,
+            initialDate: variables.initialDate,
+            finalDate: variables.finalDate,
+            location: variables.location,
+            participants: variables.participants,
+          },
+        ]
+      })
+    },
+  })
+
   async function handlePlanDetails(data: ValidationPlanData) {
     try {
-      console.log(data)
+      await createPlanFn({
+        title: data.title,
+        description: data.description,
+        initialDate: data.startDate,
+        finalDate: data.endDate,
+        location: data.location,
+        participants: data.participants,
+      })
 
       await new Promise((resolve) => setTimeout(resolve, 2000))
 

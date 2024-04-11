@@ -1,9 +1,9 @@
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { Plane, X } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 import { Pagination } from '@/components/pagination'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
@@ -18,14 +18,32 @@ import {
 } from '@/components/ui/table'
 import { getPlan } from '@/data/plan'
 
-// import { plan } from '@/data/plan'
 import { PlanDetails } from './plan-details'
 import { PlanTableFilters } from './plan-table-filters'
 
 export function Plans() {
+  const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+
+  const id = searchParams.get('id')
+  const title = searchParams.get('title')
+
   const { data: plan } = useQuery({
-    queryKey: ['plan'],
-    queryFn: getPlan,
+    queryKey: ['plan', id, title],
+    queryFn: () =>
+      getPlan({
+        id,
+        title,
+      }),
+  })
+
+  const mutation = useMutation({
+    mutationFn: () => {
+      return queryClient.cancelQueries({ queryKey: ['plan'] })
+    },
+    onSuccess: () => {
+      alert('excluido')
+    },
   })
 
   return (
@@ -60,68 +78,62 @@ export function Plans() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[4px]"></TableHead>
-                  <TableHead className="w-[2px]">Id</TableHead>
-                  <TableHead className="w-[16px]">Título</TableHead>
-                  <TableHead className="w-[50px]">Descrição</TableHead>
+                  <TableHead className="w-[10px]">Id</TableHead>
+                  <TableHead className="w-[80px]">Título</TableHead>
+                  <TableHead className="w-[100px]">Descrição</TableHead>
                   <TableHead className="w-[30px]">Data inicial</TableHead>
                   <TableHead className="w-[30px]">Data final</TableHead>
                   <TableHead className="w-[14px]">Localização</TableHead>
                   <TableHead className="w-[4px]">Participantes</TableHead>
-                  <TableHead className="w-[110px]">Status</TableHead>
                   <TableHead className="w-[14px]"></TableHead>
                   <TableHead className="w-[14px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {plan &&
-                  plan.map((plan) => {
-                    return (
-                      <TableRow key={plan.id}>
-                        <TableCell></TableCell>
-                        <TableCell className="font-mono text-xs font-medium">
-                          {plan.id}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {plan.title}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {plan.description}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {format(plan.initialDate, 'dd/MM/yyyy')}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {format(plan.finalDate, 'dd/MM/yyyy')}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {plan.location}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {plan.participants}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-amber-400" />
-                            <span className="font-medium text-muted-foreground">
-                              Pendente
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Button variant="outline" size="xs">
-                            <Plane className="mr-2 h-3 w-3" />
-                            Aprovar
-                          </Button>
-                        </TableCell>
-                        <TableCell>
-                          <Button variant="ghost" size="xs">
-                            <X className="mr-2 h-3 w-3" />
-                            Excluir
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
+                {plan?.map((plan) => {
+                  return (
+                    <TableRow key={plan.id}>
+                      <TableCell></TableCell>
+                      <TableCell className="font-mono text-xs font-medium">
+                        {plan.id}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.title}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.description}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {format(plan.initialDate, 'dd/MM/yyyy')}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {format(plan.finalDate, 'dd/MM/yyyy')}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.location}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {plan.participants}
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="outline" size="xs">
+                          <Plane className="mr-2 h-3 w-3" />
+                          Aprovar
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="xs"
+                          onClick={() => mutation.mutate()}
+                        >
+                          <X className="mr-2 h-3 w-3" />
+                          Excluir
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>
