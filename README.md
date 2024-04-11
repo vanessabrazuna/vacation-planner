@@ -4,7 +4,7 @@
 <h1 align="center"> Vacation Planner </h1>
 
 <p align="center"> 
-  An application that manages the list of vacation plans and allows users to create, update and delete vacation plans.
+  Um aplicativo que gerencia a lista de planos de férias e permite aos usuários criar, atualizar e excluir planos de férias.
 </p>
 
 ## Tecnologias Utilizadas
