@@ -1,5 +1,10 @@
-![Cover](./.github/cover.png)
-![Cover](./.github/cover2.png)
+<a align="left" width="50%">
+  ![Cover](./.github/cover.png)
+</a>
+
+<a align="right" width="50%">
+  ![Cover](./.github/cover2.png)
+</a>
 
 <h1 align="center"> Vacation Planner </h1>
 
