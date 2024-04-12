@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const validationPlanSchema = z.object({
   title: z.string().min(3, { message: 'Título é obrigatório' }),
   description: z.string().min(6, { message: 'Descrição é obrigatória' }),
-  startDate: z
+  initialDate: z
     .string()
     .refine(
       (data) => {
@@ -20,7 +20,7 @@ export const validationPlanSchema = z.object({
     )
     .transform((date) => format(date, 'yyyy-MM-dd')),
 
-  endDate: z
+  finalDate: z
     .string()
     .refine(
       (data) => {

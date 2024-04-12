@@ -1,3 +1,13 @@
+export interface Plan {
+  id: 'string'
+  title: string
+  description: string
+  initialDate: string
+  finalDate: string
+  location: string
+  participants: number
+}
+
 interface GetPlansFilters {
   id: string | null
   title: string | null

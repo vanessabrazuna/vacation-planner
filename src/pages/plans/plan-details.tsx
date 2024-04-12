@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { createPlan } from '@/data/plan'
+import { createPlan } from '@/data/plans'
 import { validationPlanSchema } from '@/utils/validation'
 
 type ValidationPlanData = z.infer<typeof validationPlanSchema>
@@ -33,9 +33,11 @@ export function PlanDetails() {
   const { mutateAsync: createPlanFn } = useMutation({
     mutationFn: createPlan,
     onSuccess(_, variables) {
-      const cached = queryClient.getQueryData(['plan'])
+      const cached = queryClient.getQueryData(['plans'])
 
-      queryClient.setQueryData(['plan'], (data) => {
+      console.log(cached)
+
+      queryClient.setQueryData(['plans'], (data) => {
         return [
           ...data,
           {
@@ -57,8 +59,8 @@ export function PlanDetails() {
       await createPlanFn({
         title: data.title,
         description: data.description,
-        initialDate: data.startDate,
-        finalDate: data.endDate,
+        initialDate: data.initialDate,
+        finalDate: data.finalDate,
         location: data.location,
         participants: data.participants,
       })
@@ -108,34 +110,30 @@ export function PlanDetails() {
             <div className="flex items-center gap-6">
               <div className="w-full">
                 <Input
-                  id="startDate"
+                  id="initialDate"
                   type="date"
-                  {...register('startDate')}
+                  {...register('initialDate')}
                   placeholder="Data inicial"
                 />
 
-                {errors.startDate && (
-                  <p className="text-red-500">{errors.startDate.message}</p>
+                {errors.initialDate && (
+                  <p className="text-red-500">{errors.initialDate.message}</p>
                 )}
               </div>
 
               <div className="w-full">
                 <Input
-                  id="endDate"
+                  id="finalDate"
                   type="date"
-                  {...register('endDate')}
+                  {...register('finalDate')}
                   placeholder="Data final"
                 />
 
-                {errors.endDate && (
-                  <p className="text-red-500">{errors.endDate.message}</p>
+                {errors.finalDate && (
+                  <p className="text-red-500">{errors.finalDate.message}</p>
                 )}
               </div>
             </div>
-
-            {errors.endDate && (
-              <p className="text-red-500">{errors.endDate.message}</p>
-            )}
 
             <Input
               id="location"

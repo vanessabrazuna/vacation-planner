@@ -21,7 +21,7 @@ export function Pagination({
   const pages = Math.ceil(totalCount / perPage) || 1
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col items-center justify-between gap-3 md:flex-row md:gap-0">
       <span className="text-sm text-muted-foreground">
         Total de {totalCount} item(s)
       </span>

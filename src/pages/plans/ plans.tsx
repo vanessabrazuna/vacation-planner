@@ -16,20 +16,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { getPlan } from '@/data/plan'
+import { getPlan } from '@/data/plans'
 
 import { PlanDetails } from './plan-details'
 import { PlanTableFilters } from './plan-table-filters'
 
 export function Plans() {
-  const queryClient = useQueryClient()
   const [searchParams] = useSearchParams()
+  const queryClient = useQueryClient()
 
   const id = searchParams.get('id')
   const title = searchParams.get('title')
 
-  const { data: plan } = useQuery({
-    queryKey: ['plan', id, title],
+  const { data: plans } = useQuery({
+    queryKey: ['plans', id, title],
     queryFn: () =>
       getPlan({
         id,
@@ -90,7 +90,7 @@ export function Plans() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {plan?.map((plan) => {
+                {plans?.map((plan) => {
                   return (
                     <TableRow key={plan.id}>
                       <TableCell></TableCell>

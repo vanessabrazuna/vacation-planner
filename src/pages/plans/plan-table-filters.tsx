@@ -53,7 +53,7 @@ export function PlanTableFilters() {
   return (
     <form
       onSubmit={handleSubmit(handleFilterPlans)}
-      className="flex items-center gap-2"
+      className="flex flex-col gap-3 md:flex-row md:items-center md:gap-2"
     >
       <span className="text-sm font-semibold">Filtros:</span>
       <Input
@@ -63,7 +63,7 @@ export function PlanTableFilters() {
       />
       <Input
         placeholder="Título do plano"
-        className="h-8 w-[320px]"
+        className="h-8 md:w-[320px]"
         {...register('title')}
       />
 
